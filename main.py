@@ -36,18 +36,22 @@ def capture_loop(age_net, gender_net):
         faces = face_cascade.detectMultiScale(gray, 1.1, 5)
         print("Found " + str(len(faces)) + " face(s)")
 
-        # Draw a rectangle around every found face
         for (x, y, w, h) in faces:
             cv2.rectangle(image, (x, y), (x + w, y + h), (255, 255, 0), 2)
             face_img = image[y:y + h, x:x + w].copy()
             blob = cv2.dnn.blobFromImage(face_img, 1, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
 
-    cv2.imshow("Image", image)
+            # Predict gender
+            gender_net.setInput(blob)
+            gender_preds = gender_net.forward()
+            gender = gender_list[gender_preds[0].argmax()]
 
-    key = cv2.waitKey(1) & 0xFF
-    rawCapture.truncate(0)
-    if key == ord("q"):
-        break
+        cv2.imshow("Image", image)
+
+        key = cv2.waitKey(1) & 0xFF
+        rawCapture.truncate(0)
+        if key == ord("q"):
+            break
 
 
 if __name__ == '__main__':
