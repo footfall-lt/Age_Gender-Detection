@@ -30,18 +30,22 @@ def capture_loop(age_net, gender_net):
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
 
+        #TODO: update haarcascades XML for Raspi optimized OpenCV build
         face_cascade = cv2.CascadeClassifier('/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml')
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.1, 5)
         print("Found " + str(len(faces)) + " face(s)")
 
+        # Draw a rectangle around every found face
+        for (x, y, w, h) in faces:
+            cv2.rectangle(image, (x, y), (x + w, y + h), (255, 255, 0), 2)
+            face_img = image[y:y + h, x:x + w].copy()
+            blob = cv2.dnn.blobFromImage(face_img, 1, (227, 227), MODEL_MEAN_VALUES, swapRB=False)
+
     cv2.imshow("Image", image)
 
     key = cv2.waitKey(1) & 0xFF
-
-    # clear the stream for the next frame
     rawCapture.truncate(0)
-
     if key == ord("q"):
         break
 
