@@ -10,3 +10,6 @@ camera = PiCamera()
 camera.resolution = (640, 480)
 camera.framerate = 30
 rawCapture = PiRGBArray(camera, size=(640, 480))
+
+MODEL_MEAN_VALUES = (78.4263377603, 87.7689143744, 114.895847746)
+
