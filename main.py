@@ -30,7 +30,7 @@ def capture_loop(age_net, gender_net):
     for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
         image = frame.array
 
-        #TODO: update haarcascades XML for Raspi optimized OpenCV build
+        # TODO: update haarcascades XML for Raspi optimized OpenCV build
         face_cascade = cv2.CascadeClassifier('/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml')
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, 1.1, 5)
@@ -45,6 +45,13 @@ def capture_loop(age_net, gender_net):
             gender_net.setInput(blob)
             gender_preds = gender_net.forward()
             gender = gender_list[gender_preds[0].argmax()]
+
+            # Predict age
+            age_net.setInput(blob)
+            age_preds = age_net.forward()
+            age = age_list[age_preds[0].argmax()]
+            overlay_text = "%s, %s" % (gender, age)
+            cv2.putText(image, overlay_text, (x, y), font, 2, (255, 255, 255), 2, cv2.LINE_AA)
 
         cv2.imshow("Image", image)
 
