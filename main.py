@@ -27,6 +27,13 @@ def initialize_caffe_model():
 def capture_loop(age_net, gender_net):
     font = cv2.FONT_HERSHEY_SIMPLEX
 
+    for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
+        image = frame.array
+
+        face_cascade = cv2.CascadeClassifier('/usr/local/share/OpenCV/haarcascades/haarcascade_frontalface_alt.xml')
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 5)
+        print("Found " + str(len(faces)) + " face(s)")
 
     cv2.imshow("Image", image)
 
