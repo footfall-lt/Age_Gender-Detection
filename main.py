@@ -17,14 +17,26 @@ gender_list = ['Male', 'Female']
 
 def initialize_caffe_model():
     print('Loading models...')
-    age_net = cv2.dnn.readNetFromCaffe(
-        "age_gender_models/deploy_age.prototxt",
-        "age_gender_models/age_net.caffemodel")
-    gender_net = cv2.dnn.readNetFromCaffe(
-        "age_gender_models/deploy_gender.prototxt",
-        "age_gender_models/gender_net.caffemodel")
+    age_net = cv2.dnn.readNetFromCaffe("age_gender_models/deploy_age.prototxt", "age_gender_models/age_net.caffemodel")
+    gender_net = cv2.dnn.readNetFromCaffe("age_gender_models/deploy_gender.prototxt",
+                                          "age_gender_models/gender_net.caffemodel")
 
     return age_net, gender_net
+
+
+def capture_loop(age_net, gender_net):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+
+
+    cv2.imshow("Image", image)
+
+    key = cv2.waitKey(1) & 0xFF
+
+    # clear the stream for the next frame
+    rawCapture.truncate(0)
+
+    if key == ord("q"):
+        break
 
 
 if __name__ == '__main__':
